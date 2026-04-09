@@ -1,40 +1,46 @@
-# Object-Detection-
-
-# Custom Object Detection using YOLOv8
+# Real-Time Object Detection and Distance Estimation
 
 ## Overview
 
-This project implements a real-time object detection system using YOLOv8.
-The model is trained on a custom dataset to detect specific objects such as a pen and an earphone case through a webcam feed.
+This project implements a real-time computer vision system that combines object detection and depth estimation to determine the relative distance of objects from a person using a single camera.
+
+The system detects objects (e.g., pen, earphone case, person) and estimates their distance, displaying which object is closer and by how much.
 
 ---
 
 ## Objective
 
-To build a custom object detection model that:
-
-* Detects specific objects in real time
-* Demonstrates understanding of detection (classification + localization)
+* Detect specific objects using a custom-trained model
+* Estimate relative depth from a monocular camera
+* Compute approximate distances in real time
+* Compare object distances with respect to a person
 
 ---
 
-## Key Concepts
+## System Pipeline
+
+Camera → Object Detection (YOLOv8) → Depth Estimation (MiDaS) → Distance Calculation → Comparison
+
+---
+
+## Components
 
 ### Object Detection
 
-Object detection involves:
+* Model: YOLOv8 (Ultralytics)
+* Trained on a custom dataset (~200 images)
+* Classes: `pen`, `case` (person detected via pretrained weights)
 
-* Classification (what the object is)
-* Localization (where the object is)
+### Depth Estimation
 
-The model outputs bounding boxes, class labels, and confidence scores.
+* Model: MiDaS (monocular depth estimation)
+* Provides relative depth from a single image
 
-### YOLOv8
+### Distance Calculation
 
-YOLO (You Only Look Once) is a real-time detection algorithm that:
-
-* Processes the entire image in one pass
-* Predicts bounding boxes and classes simultaneously
+* Depth values converted to approximate distance using calibration:
+  distance ≈ depth × scale
+* Scale determined using a known reference distance
 
 ---
 
@@ -42,6 +48,7 @@ YOLO (You Only Look Once) is a real-time detection algorithm that:
 
 * Python
 * YOLOv8 (Ultralytics)
+* MiDaS (PyTorch)
 * OpenCV
 * NumPy
 
@@ -49,76 +56,65 @@ YOLO (You Only Look Once) is a real-time detection algorithm that:
 
 ## Dataset
 
-### Data Collection
-
-* ~200 images captured manually
-* Includes variation in lighting, angles, and background
-
-### Classes
-
-* pen
-* case
-
-### Annotation
-
-* Tool: CVAT
-* Format: YOLO
+* Images collected manually with variation in lighting, angle, and background
+* Annotated using CVAT in YOLO format
 
 ---
 
 ## Training
 
-### Command
-
-```bash
+```bash id="v1dr6j"
 yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=50 imgsz=640
 ```
 
-### Metrics
+---
 
-* Precision (P)
-* Recall (R)
-* mAP50
-* mAP50-95
+## Real-Time Execution
+
+```bash id="l8q5d7"
+python main.py
+```
 
 ---
 
-## Real-Time Detection
+## Output
 
-### Run
-
-```bash
-python test_yolo.py
-```
-
-### Output
-
-* Webcam feed with bounding boxes
-* Detected labels and confidence scores
+* Bounding boxes with labels
+* Estimated distance (in cm, approximate)
+* Comparison output indicating which object is closer
 
 ---
 
 ## Challenges
 
-* Limited dataset size
-* Sensitivity to annotation quality
+* Depth values are relative and unstable
+* Sensitivity to lighting and background
+* No direct access to camera calibration parameters
 
 ---
 
-## Improvements
+## Solutions
 
-* Increase dataset size
-* Use larger YOLO models
-* Add more object classes
+* Depth normalization and spatial averaging
+* Temporal smoothing using a moving window
+* Manual calibration using a known distance
+
+---
+
+## Limitations
+
+* Distance estimation is approximate, not absolute
+* Performance depends on camera quality and environment
+* Monocular depth estimation has inherent inaccuracies
 
 ---
 
 ## Learning Outcomes
 
-* Understanding object detection vs classification
-* Dataset creation and annotation
-* Training and evaluating detection models
-* Real-time computer vision implementation
+* Understanding of object detection and localization
+* Use of pretrained models for depth estimation
+* Integration of multiple computer vision components
+* Handling real-time data and noise reduction
 
 ---
 
