@@ -6,7 +6,7 @@ from ultralytics import YOLO
 
 SCALE = 0.0625  
 
-model = YOLO("runs/detect/train2/weights/best.pt")
+model = YOLO("best.pt")
 
 midas = torch.hub.load("intel-isl/MiDaS", "MiDaS_small")
 midas.eval()
