@@ -3,7 +3,7 @@ import torch
 import numpy as np
 from ultralytics import YOLO
 
-# 🔥 CHANGE THIS AFTER CALIBRATION
+#  CHANGE THIS AFTER CALIBRATION
 SCALE = 0.0625  # example value (you will adjust)
 
 # Load YOLO model
@@ -83,7 +83,7 @@ while True:
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.6, (0, 255, 0), 2)
 
-    # 🔥 Compare objects
+    #  Compare objects
     if len(objects) >= 2:
         items = list(objects.items())
 
