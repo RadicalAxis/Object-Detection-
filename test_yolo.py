@@ -1,12 +1,22 @@
+import os
 import cv2
 from ultralytics import YOLO
 
-# Load your trained model
-model = YOLO("runs/detect/train2/weights/best.pt")
+# -------- PATH SETUP --------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "best.pt")
 
-# Open webcam
+# -------- LOAD MODEL --------
+model = YOLO(model_path)
+
+# -------- WEBCAM --------
 cap = cv2.VideoCapture(0)
 
+if not cap.isOpened():
+    print("Error: Could not access webcam")
+    exit()
+
+# -------- MAIN LOOP --------
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -18,10 +28,13 @@ while True:
     # Draw results
     annotated_frame = results[0].plot()
 
-    # Show frame
-    cv2.imshow("YOLO Detection", annotated_frame)
+    # Safe display
+    try:
+        cv2.imshow("YOLO Detection", annotated_frame)
+    except:
+        pass
 
-    # Exit on q
+    # Exit on 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
